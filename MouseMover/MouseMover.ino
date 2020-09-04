@@ -1,7 +1,7 @@
 #include <AbsMouse.h>
 
-int last_nYAxis_ = 0;
-int last_nXAxis_ = 0;
+int last_analogX = 0;
+int last_analogY = 0;
 
 int buttonPin = 13;
 int buttonPin2 = 2;
@@ -43,8 +43,13 @@ void loop() {
     delay(200);
 
   }
-  if (isMouseShouldMove ==  true)
+  int currentAnalogX = analogRead(A0);
+  int currentAnalogY = analogRead(A1);
+  if (isMouseShouldMove ==  true && (last_analogX != currentAnalogX ||last_analogY != currentAnalogY ))
   {
+    last_analogX = currentAnalogX;
+    last_analogY = currentAnalogY;
+    
     XAxis_ = 1023 - analogRead(A0);
     YAxis_ = 1023 - analogRead(A1);
     if(XAxis_ > 857)
@@ -62,12 +67,10 @@ void loop() {
     int nYAxis_ = ((YAxis_ - 209) / (893 - 209)) * 720;
     int nXAxis_ = ((XAxis_ - 218) / (856 - 218)) * 1023;
 
-    if(last_nYAxis_ != nYAxis_ && last_nXAxis_ != nXAxis_)
-    {
+    
       AbsMouse.move(nXAxis_, nYAxis_ );
-      last_nYAxis_ = nYAxis_;
-      last_nXAxis_ = nXAxis_;
-    }
+
+    
     
 
      Serial.println("nXAxis_");

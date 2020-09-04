@@ -156,64 +156,25 @@ void loop() {
     
     
 
-     Serial.println("nXAxis_");
-     Serial.println(nXAxis_);
-     Serial.print("XAxis_");
-     Serial.println(XAxis_);
+    // Serial.println("nXAxis_");
+    // Serial.println(nXAxis_);
+    // Serial.print("XAxis_");
+    // Serial.println(XAxis_);
 
-    Serial.print("nYAxis_");
-     Serial.println(nYAxis_);
-     Serial.print("YAxis_");
-     Serial.println(YAxis_);
-     Serial.print("isMouseShouldMove-");
-    Serial.println("WIRKING ABS");
+   // Serial.print("nYAxis_");
+   //  Serial.println(nYAxis_);
+   //  Serial.print("YAxis_");
+   //  Serial.println(YAxis_);
+   //  Serial.print("isMouseShouldMove-");
+   // Serial.println("WIRKING ABS");
   }
   else
   {
-    Serial.println("NOT WORKING ABS");
+    //Serial.println("NOT WORKING ABS");
   }
 
 
-  //for (int i = 0; i <= 1024; i++) {
-
-
-  //buttonState = digitalRead(buttonPin);
-
-
-
-  //if (buttonState == HIGH) {
-
-  //AbsMouse.move(i, 200);
-  // Serial.println(i);
-
-  //}
-  //delay(10);
-  //}
-
-
-  // for (int i = 0; i <= 720; i++) {
-
-
-  // buttonState = digitalRead(buttonPin);
-
-  //if (buttonState == HIGH) {
-
-  // AbsMouse.move(200, i);
-  // Serial.println(i);
-
-  //}
-
-
-  // }
-
-  // do some stuff
-  // AbsMouse.move(500, 200);
-  // AbsMouse.press(MOUSE_LEFT);
-  // AbsMouse.release(MOUSE_LEFT);
-  // do some other stuff
-
-
-
+ 
 
   ////////////////////////
  if (digitalRead(buttonPin2) == HIGH )
@@ -240,13 +201,7 @@ void loop() {
     
     // AbsMouse.release(MOUSE_LEFT );
   }
-  ///////////////////////////
-
-  ///////////////////////////
-
-
-  ////////////////////////////////////////
-   ////////////////////////
+ 
  if (digitalRead(buttonPin3) == HIGH )
   {
     if(!buttonState3)
@@ -296,7 +251,6 @@ void loop() {
       Serial.println("buttonState4 releaseed");
     }
     
-    // AbsMouse.release(MOUSE_LEFT );
   }
   ///////////////////////////
 

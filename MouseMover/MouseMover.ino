@@ -115,8 +115,8 @@ void loop() {
   if (digitalRead(buttonPin) == HIGH )
   {
     isMouseShouldMove = !isMouseShouldMove;
-    Serial.println("isMouseShouldMove - ");
-    Serial.println(isMouseShouldMove);
+   // Serial.println("isMouseShouldMove - ");
+   // Serial.println(isMouseShouldMove);
     if (!isMouseShouldMove)
     {
       AbsMouse.move(500, 500 );

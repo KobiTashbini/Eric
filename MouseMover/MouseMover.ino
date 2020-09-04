@@ -37,29 +37,67 @@ void loop() {
  if (Serial.available()) {  
         data = Serial.read();  
         if (data == 'X') {  
+           xBorderLimit = xBorderLimit + 1;
+
+     Serial.println("xBorderLimit : ");
+     Serial.println(xBorderLimit);
            
         } else if(data == 'x'){  
-        
+        xBorderLimit = xBorderLimit - 1;
+
+        Serial.println("xBorderLimit : ");
+     Serial.println(xBorderLimit);
         }  
          else if (data == 'Y') {  
-           
+           yBorderLimitA = yBorderLimitA - 1;
+
+             Serial.println("yBorderLimitA : ");
+             Serial.println(yBorderLimitA);
        
         } else if(data == 'y'){  
-         
+          yBorderLimitA = yBorderLimitA + 1;
+
+           Serial.println("yBorderLimitA : ");
+             Serial.println(yBorderLimitA);
+    
+        }  
+         else if (data == 'Z') {  
+           yBorderLimitB = yBorderLimitB - 1;
+
+            Serial.println("yBorderLimitB : ");
+             Serial.println(yBorderLimitB);
+       
+        } else if(data == 'z'){  
+          yBorderLimitB = yBorderLimitB + 1;
+
+          Serial.println("yBorderLimitB : ");
+             Serial.println(yBorderLimitB);
     
         }  
           else if (data == 'H') {  
            
-       
+       yScaleValue = yScaleValue + 1;
+
+       Serial.println("yScaleValue : ");
+             Serial.println(yScaleValue);
         } else if(data == 'h'){  
         
-    
+     yScaleValue = yScaleValue - 1;
+
+     Serial.println("yScaleValue : ");
+             Serial.println(yScaleValue);
         }  
          else if (data == 'W') {  
-           
+           xScaleValue = xScaleValue + 1;
+
+           Serial.println("xScaleValue : ");
+             Serial.println(xScaleValue);
        
         } else if(data == 'w'){  
-          
+            xScaleValue = xScaleValue - 1;
+
+             Serial.println("xScaleValue : ");
+             Serial.println(xScaleValue);
     
         }  
         

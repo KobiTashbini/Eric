@@ -1,5 +1,5 @@
 #include <AbsMouse.h>
-
+int data; 
 int last_analogX = 0;
 int last_analogY = 0;
 
@@ -15,6 +15,12 @@ bool buttonState4 = false;
 float XAxis_ = 0;
 float YAxis_ = 0;
 
+int xBorderLimit = 857;
+int yBorderLimitA = 893;
+int yBorderLimitB = 195;
+
+int xScaleValue = 218;
+int yScaleValue = 209;
 
 void setup() {
   Serial.begin(9600);
@@ -27,6 +33,45 @@ void setup() {
 }
 
 void loop() {
+
+ if (Serial.available()) {  
+        data = Serial.read();  
+        if (data == 'X') {  
+           
+        } else if(data == 'x'){  
+        
+        }  
+         else if (data == 'Y') {  
+           
+       
+        } else if(data == 'y'){  
+         
+    
+        }  
+          else if (data == 'H') {  
+           
+       
+        } else if(data == 'h'){  
+        
+    
+        }  
+         else if (data == 'W') {  
+           
+       
+        } else if(data == 'w'){  
+          
+    
+        }  
+        
+    
+          
+        else
+        {
+          
+        }
+    }  
+
+  
 
   Serial.println("isMouseShouldMove - ");
   if (digitalRead(buttonPin) == HIGH )
@@ -52,20 +97,20 @@ void loop() {
     
     XAxis_ = 1023 - analogRead(A0);
     YAxis_ = 1023 - analogRead(A1);
-    if(XAxis_ > 857)
+    if(XAxis_ > xBorderLimit)
     {
-      XAxis_ = 857;
+      XAxis_ = xBorderLimit;
     }
-    if(YAxis_ > 893)
+    if(YAxis_ > yBorderLimitA)
     {
-      YAxis_ = 893;
+      YAxis_ = yBorderLimitA;
     }
-    else if(YAxis_ < 195)
+    else if(YAxis_ < yBorderLimitB)
     {
-      YAxis_ = 195;
+      YAxis_ = yBorderLimitB;
     }
-    int nYAxis_ = ((YAxis_ - 209) / (893 - 209)) * 720;
-    int nXAxis_ = ((XAxis_ - 218) / (856 - 218)) * 1023;
+    int nYAxis_ = ((YAxis_ - yScaleValue) / (yBorderLimitA - yScaleValue)) * 720;
+    int nXAxis_ = ((XAxis_ - xScaleValue) / ((xBorderLimit - 1) - xScaleValue)) * 1023;
 
     
       AbsMouse.move(nXAxis_, nYAxis_ );

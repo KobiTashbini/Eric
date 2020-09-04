@@ -111,7 +111,7 @@ void loop() {
 
   
 
-  Serial.println("isMouseShouldMove - ");
+  //Serial.println("isMouseShouldMove - ");
   if (digitalRead(buttonPin) == HIGH )
   {
     isMouseShouldMove = !isMouseShouldMove;

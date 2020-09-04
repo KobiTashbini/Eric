@@ -41,24 +41,28 @@ void loop() {
 
      Serial.println("xBorderLimit : ");
      Serial.println(xBorderLimit);
+     Serial.write(xBorderLimit);
            
         } else if(data == 'x'){  
         xBorderLimit = xBorderLimit - 1;
 
         Serial.println("xBorderLimit : ");
      Serial.println(xBorderLimit);
+     Serial.write(xBorderLimit);
         }  
          else if (data == 'Y') {  
            yBorderLimitA = yBorderLimitA - 1;
 
              Serial.println("yBorderLimitA : ");
              Serial.println(yBorderLimitA);
+             Serial.write(yBorderLimitA);
        
         } else if(data == 'y'){  
           yBorderLimitA = yBorderLimitA + 1;
 
            Serial.println("yBorderLimitA : ");
              Serial.println(yBorderLimitA);
+              Serial.write(yBorderLimitA);
     
         }  
          else if (data == 'Z') {  
@@ -66,12 +70,14 @@ void loop() {
 
             Serial.println("yBorderLimitB : ");
              Serial.println(yBorderLimitB);
+              Serial.write(yBorderLimitB);
        
         } else if(data == 'z'){  
           yBorderLimitB = yBorderLimitB + 1;
 
           Serial.println("yBorderLimitB : ");
              Serial.println(yBorderLimitB);
+              Serial.write(yBorderLimitB);
     
         }  
           else if (data == 'H') {  
@@ -80,24 +86,28 @@ void loop() {
 
        Serial.println("yScaleValue : ");
              Serial.println(yScaleValue);
+             Serial.write(yScaleValue);
         } else if(data == 'h'){  
         
      yScaleValue = yScaleValue - 1;
 
      Serial.println("yScaleValue : ");
              Serial.println(yScaleValue);
+             Serial.write(yScaleValue);
         }  
          else if (data == 'W') {  
            xScaleValue = xScaleValue + 1;
 
            Serial.println("xScaleValue : ");
              Serial.println(xScaleValue);
+             Serial.write(xScaleValue);
        
         } else if(data == 'w'){  
             xScaleValue = xScaleValue - 1;
 
              Serial.println("xScaleValue : ");
              Serial.println(xScaleValue);
+             Serial.write(xScaleValue);
     
         }  
         

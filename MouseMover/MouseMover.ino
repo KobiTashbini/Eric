@@ -1,5 +1,8 @@
 #include <AbsMouse.h>
 
+int last_nYAxis_ = 0;
+int last_nXAxis_ = 0;
+
 int buttonPin = 13;
 int buttonPin2 = 2;
 int buttonPin3 = 3;
@@ -58,7 +61,14 @@ void loop() {
     }
     int nYAxis_ = ((YAxis_ - 209) / (893 - 209)) * 720;
     int nXAxis_ = ((XAxis_ - 218) / (856 - 218)) * 1023;
-    AbsMouse.move(nXAxis_, nYAxis_ );
+
+    if(last_nYAxis_ != nYAxis_ && last_nXAxis_ != nXAxis_)
+    {
+      AbsMouse.move(nXAxis_, nYAxis_ );
+      last_nYAxis_ = nYAxis_;
+      last_nXAxis_ = nXAxis_;
+    }
+    
 
      Serial.println("nXAxis_");
      Serial.println(nXAxis_);

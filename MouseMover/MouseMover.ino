@@ -21,8 +21,6 @@ void setup() {
   pinMode(buttonPin3, INPUT_PULLUP);
   pinMode(buttonPin4, INPUT_PULLUP);
   AbsMouse.report();
-
-
 }
 
 void loop() {
@@ -46,21 +44,32 @@ void loop() {
   {
     XAxis_ = 1023 - analogRead(A0);
     YAxis_ = 1023 - analogRead(A1);
-
+    if(XAxis_ > 857)
+    {
+      XAxis_ = 857;
+    }
+    if(YAxis_ > 893)
+    {
+      YAxis_ = 893;
+    }
+    else if(YAxis_ < 195)
+    {
+      YAxis_ = 195;
+    }
     int nYAxis_ = ((YAxis_ - 209) / (893 - 209)) * 720;
     int nXAxis_ = ((XAxis_ - 218) / (856 - 218)) * 1023;
     AbsMouse.move(nXAxis_, nYAxis_ );
 
-    // Serial.println("nXAxis_");
-    // Serial.println(nXAxis_);
-    // Serial.print("XAxis_");
-    // Serial.println(XAxis_);
+     Serial.println("nXAxis_");
+     Serial.println(nXAxis_);
+     Serial.print("XAxis_");
+     Serial.println(XAxis_);
 
-    //Serial.print("nYAxis_");
-    // Serial.println(nYAxis_);
-    // Serial.print("YAxis_");
-    // Serial.println(YAxis_);
-    // Serial.print("isMouseShouldMove-");
+    Serial.print("nYAxis_");
+     Serial.println(nYAxis_);
+     Serial.print("YAxis_");
+     Serial.println(YAxis_);
+     Serial.print("isMouseShouldMove-");
     Serial.println("WIRKING ABS");
   }
   else

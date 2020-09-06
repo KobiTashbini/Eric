@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouceManager", "MouceManager\MouceManager.csproj", "{70E66613-8562-4C41-B9AB-A2059E58E133}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70E66613-8562-4C41-B9AB-A2059E58E133}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70E66613-8562-4C41-B9AB-A2059E58E133}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70E66613-8562-4C41-B9AB-A2059E58E133}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70E66613-8562-4C41-B9AB-A2059E58E133}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {589CD8ED-627F-426E-9EED-3F6EF1B228DB}
+	EndGlobalSection
+EndGlobal

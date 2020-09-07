@@ -8,16 +8,19 @@ int buttonPin2 = 2;
 int buttonPin3 = 3;
 int buttonPin4 = 4;
 
+long shotCounter = 0;
+bool mulShotButtonState = false;
 bool oneShotButtonState = false;
 int oneShotButton = 8;
 int mulShotButton = 9;
 int celenoidOutput = 10;
 bool isCelenoidOutputOn = false;
-const long oneShotinterval = 10;
+const long oneShotinterval = 20;
 
-unsigned long startOneShotMillis = 0;
 
-bool isMouseShouldMove = false;
+unsigned long startShotMillis = 0;
+
+bool isMouseShouldMove = true;
 bool buttonState = false;
 bool buttonState2 = false;
 bool buttonState3 = false;
@@ -52,13 +55,17 @@ void setup() {
 void loop() {
 
   if ( digitalRead(oneShotButton) == HIGH && !isCelenoidOutputOn && !oneShotButtonState) {
-    Serial.print("igitalRead(oneShotButton) : ");
+  //  Serial.print("igitalRead(oneShotButton) : ");
 
     digitalWrite(celenoidOutput, HIGH);
-    Serial.println("digitalWrite(celenoidOutput, HIGH)");
+   // Serial.println("digitalWrite(celenoidOutput, HIGH)");
+    
     isCelenoidOutputOn = true;
     oneShotButtonState = true;
-    startOneShotMillis = millis();
+    startShotMillis = millis();
+    // Serial.println( shotCounter);
+     shotCounter++;
+   
   }
   else if (digitalRead(oneShotButton) == LOW)
   {
@@ -68,17 +75,20 @@ void loop() {
 
 
     if ( digitalRead(mulShotButton) == HIGH && !isCelenoidOutputOn ) {
-    Serial.print("igitalRead(mulShotButton) : ");
+   // Serial.print("igitalRead(mulShotButton) : ");
 
     digitalWrite(celenoidOutput, HIGH);
-    Serial.println("digitalWrite(celenoidOutput, HIGH)");
+   // Serial.println("digitalWrite(celenoidOutput, HIGH)");
     isCelenoidOutputOn = true;
-    oneShotButtonState = true;
-    startOneShotMillis = millis();
+    mulShotButtonState = true;
+    startShotMillis = millis();
+
+    // Serial.println( shotCounter);
+     shotCounter++;
   }
-  else if (digitalRead(oneShotButton) == LOW)
+  else if (digitalRead(mulShotButton) == LOW)
   {
-    oneShotButtonState = false;
+    mulShotButtonState = false;
 
   }
 
@@ -205,7 +215,9 @@ void loop() {
 
 
 
-  //Serial.println("isMouseShouldMove - ");
+  Serial.println("isMouseShouldMove - ");
+  Serial.println(isMouseShouldMove);
+  
   if (digitalRead(buttonPin) == HIGH )
   {
     isMouseShouldMove = !isMouseShouldMove;
@@ -222,8 +234,10 @@ void loop() {
   }
   int currentAnalogX = analogRead(A0);
   int currentAnalogY = analogRead(A1);
-  //Serial.println("currentAnalogX - ");
-  //Serial.println(currentAnalogX);
+  Serial.println("currentAnalogX - ");
+  Serial.println(currentAnalogX);
+   Serial.println("currentAnalogY - ");
+  Serial.println(currentAnalogY);
   if (isMouseShouldMove ==  true && (last_analogX != currentAnalogX || last_analogY != currentAnalogY ))
   {
     last_analogX = currentAnalogX;
@@ -231,8 +245,8 @@ void loop() {
 
     XAxis_ = 1023 - analogRead(A0);
     YAxis_ = 1023 - analogRead(A1);
-    // Serial.println("XAxis_ - ");
-    //Serial.println(XAxis_);
+     //Serial.println("XAxis_ - ");
+   // Serial.println(XAxis_);
     if (XAxis_ > xBorderLimitA)
     {
       XAxis_ = xBorderLimitA;
@@ -358,7 +372,7 @@ void loop() {
   }
   ///////////////////////////
   unsigned long currentMillis = millis();
-  if ((currentMillis - startOneShotMillis >= oneShotinterval) && isCelenoidOutputOn)
+  if ((currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn)
   {
     digitalWrite(celenoidOutput, LOW);
     isCelenoidOutputOn = false;

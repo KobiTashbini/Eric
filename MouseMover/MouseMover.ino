@@ -4,21 +4,27 @@ int last_analogX = 0;
 int last_analogY = 0;
 
 int buttonPin = 13;
-int buttonPin2 = 2;
+
 int buttonPin3 = 3;
 int buttonPin4 = 4;
 
+int buttonPin2 = 2;
 long shotCounter = 0;
 bool mulShotButtonState = false;
 bool oneShotButtonState = false;
-int oneShotButton = 8;
-int mulShotButton = 9;
+//int oneShotButton = 9;
+int oneShotButton = 2;
+int mulShotButton = 8;
 int celenoidOutput = 10;
-bool isCelenoidOutputOn = false;
-const long oneShotinterval = 20;
+bool isCelenoidOutputOn_M = false;
+bool isCelenoidOutputOn_O = false;
+
+const long oneShotinterval = 2;
 
 
 unsigned long startShotMillis = 0;
+unsigned long lastMulShot = 0;
+
 
 bool isMouseShouldMove = true;
 bool buttonState = false;
@@ -40,12 +46,17 @@ void setup() {
   Serial.begin(9600);
   AbsMouse.init(1024, 720);
   pinMode(buttonPin, INPUT);
-  pinMode(buttonPin2, INPUT_PULLUP);
+  
+ // pinMode(buttonPin2, INPUT_PULLUP);
+ // digitalWrite(buttonPin2,HIGH);
+  
   pinMode(buttonPin3, INPUT_PULLUP);
   pinMode(buttonPin4, INPUT_PULLUP);
 
   pinMode(oneShotButton, INPUT);
+  //digitalWrite(oneShotButton,HIGH);
   pinMode(mulShotButton, INPUT);
+  // digitalWrite(mulShotButton,HIGH);
   pinMode(celenoidOutput, OUTPUT);
 
 
@@ -53,15 +64,24 @@ void setup() {
 }
 
 void loop() {
-
-  if ( digitalRead(oneShotButton) == HIGH && !isCelenoidOutputOn && !oneShotButtonState) {
-  //  Serial.print("igitalRead(oneShotButton) : ");
+//Serial.println(digitalRead(oneShotButton));
+    
+ 
+  if ( digitalRead(oneShotButton) == HIGH && !isCelenoidOutputOn_O && !oneShotButtonState) {
+    oneShotButtonState = true;
+  //  Serial.print("!digitalRead(oneShotButton) == HIGH");
 
     digitalWrite(celenoidOutput, HIGH);
+    Serial.print("digitalWrite(celenoidOutput, HIGH);");
+   // AbsMouse.press(MOUSE_LEFT );
+     isCelenoidOutputOn_O = true;
    // Serial.println("digitalWrite(celenoidOutput, HIGH)");
     
-    isCelenoidOutputOn = true;
-    oneShotButtonState = true;
+    // digitalWrite(celenoidOutput, LOW);
+   // Serial.println("digitalWrite(celenoidOutput, LOW)");
+    //  isCelenoidOutputOn = false;
+    
+   
     startShotMillis = millis();
     // Serial.println( shotCounter);
      shotCounter++;
@@ -69,21 +89,24 @@ void loop() {
   }
   else if (digitalRead(oneShotButton) == LOW)
   {
+     // Serial.print("!digitalRead(oneShotButton) == LOW");
+    
     oneShotButtonState = false;
+  //  AbsMouse.release(MOUSE_LEFT );
 
   }
 
 
-    if ( digitalRead(mulShotButton) == HIGH && !isCelenoidOutputOn ) {
+    if ( digitalRead(mulShotButton) == HIGH && !isCelenoidOutputOn_M  ) {
    // Serial.print("igitalRead(mulShotButton) : ");
 
     digitalWrite(celenoidOutput, HIGH);
-   // Serial.println("digitalWrite(celenoidOutput, HIGH)");
-    isCelenoidOutputOn = true;
+   Serial.println("digitalWrite(celenoidOutput, HIGH)");
+    isCelenoidOutputOn_M = true;
     mulShotButtonState = true;
-    startShotMillis = millis();
+    lastMulShot = millis();
 
-    // Serial.println( shotCounter);
+     Serial.println( shotCounter);
      shotCounter++;
   }
   else if (digitalRead(mulShotButton) == LOW)
@@ -106,13 +129,13 @@ void loop() {
       // Serial.println(xBorderLimit);
       // Serial.println("A");
       //  Serial.write("A");
-      Serial.println(xBorderLimitA);
+    //  Serial.println(xBorderLimitA);
     } else if (data == 'x') {
       xBorderLimitA = xBorderLimitA - 1;
 
       //Serial.println("xBorderLimit : ");
       // Serial.println(xBorderLimit);
-      Serial.println(xBorderLimitA);
+   //   Serial.println(xBorderLimitA);
 
     }
 
@@ -120,11 +143,11 @@ void loop() {
       xBorderLimitB = xBorderLimitB + 1;
 
 
-      Serial.println(xBorderLimitB);
+    //  Serial.println(xBorderLimitB);
     } else if (data == 'w') {
       xBorderLimitB = xBorderLimitB - 1;
 
-      Serial.println(xBorderLimitB);
+   //   Serial.println(xBorderLimitB);
 
     }
 
@@ -133,14 +156,14 @@ void loop() {
 
       //Serial.println("yBorderLimitA : ");
       //Serial.println(yBorderLimitA);
-      Serial.println(yBorderLimitA);
+    //  Serial.println(yBorderLimitA);
 
     } else if (data == 'y') {
       yBorderLimitA = yBorderLimitA + 1;
 
       //   Serial.println("yBorderLimitA : ");
       //Serial.println(yBorderLimitA);
-      Serial.println(yBorderLimitA);
+ //     Serial.println(yBorderLimitA);
 
     }
     else if (data == 'Z') {
@@ -148,14 +171,14 @@ void loop() {
 
       // Serial.println("yBorderLimitB : ");
       // Serial.println(yBorderLimitB);
-      Serial.println(yBorderLimitB);
+    //  Serial.println(yBorderLimitB);
 
     } else if (data == 'z') {
       yBorderLimitB = yBorderLimitB - 1;
 
       //  Serial.println("yBorderLimitB : ");
       //     Serial.println(yBorderLimitB);
-      Serial.println(yBorderLimitB);
+   //   Serial.println(yBorderLimitB);
 
     }
     else if (data == 'H') {
@@ -164,28 +187,28 @@ void loop() {
 
       //Serial.println("yScaleValue : ");
       //      Serial.println(yScaleValue);
-      Serial.println(yScaleValue);
+  //    Serial.println(yScaleValue);
     } else if (data == 'h') {
 
       yScaleValue = yScaleValue - 1;
 
       // Serial.println("yScaleValue : ");
       //      //   Serial.println(yScaleValue);
-      Serial.println(yScaleValue);
+     // Serial.println(yScaleValue);
     }
     else if (data == 'W') {
       xScaleValue = xScaleValue + 1;
 
       //Serial.println("xScaleValue : ");
       //   Serial.println(xScaleValue);
-      Serial.println(xScaleValue);
+    //  Serial.println(xScaleValue);
       //
     } else if (data == 'w') {
       xScaleValue = xScaleValue - 1;
 
       //   Serial.println("xScaleValue : ");
       //   Serial.println(xScaleValue);
-      Serial.println(xScaleValue);
+    //  Serial.println(xScaleValue);
 
     }
 
@@ -199,12 +222,12 @@ void loop() {
       yBorderLimitB = 195;
       xScaleValue = 218;
       yScaleValue = 209;
-      Serial.println("RestoreSuccess");
+    //  Serial.println("RestoreSuccess");
     }
 
     else
     {
-      Serial.println('M');
+    //  Serial.println('M');
     }
   }
 
@@ -215,8 +238,8 @@ void loop() {
 
 
 
-  Serial.println("isMouseShouldMove - ");
-  Serial.println(isMouseShouldMove);
+ // Serial.println("isMouseShouldMove - ");
+ // Serial.println(isMouseShouldMove);
   
   if (digitalRead(buttonPin) == HIGH )
   {
@@ -234,10 +257,10 @@ void loop() {
   }
   int currentAnalogX = analogRead(A0);
   int currentAnalogY = analogRead(A1);
-  Serial.println("currentAnalogX - ");
-  Serial.println(currentAnalogX);
-   Serial.println("currentAnalogY - ");
-  Serial.println(currentAnalogY);
+ // Serial.println("currentAnalogX - ");
+ // Serial.println(currentAnalogX);
+  // Serial.println("currentAnalogY - ");
+//  Serial.println(currentAnalogY);
   if (isMouseShouldMove ==  true && (last_analogX != currentAnalogX || last_analogY != currentAnalogY ))
   {
     last_analogX = currentAnalogX;
@@ -300,7 +323,7 @@ void loop() {
     if (!buttonState2)
     {
       buttonState2 = true;
-      //   Serial.println("buttonPin2 clicked and not press MOUSE_LEFT");
+        Serial.println("buttonPin2 clicked and  press MOUSE_LEFT");
       //   Serial.println(buttonState2);
       AbsMouse.press(MOUSE_LEFT );
     }
@@ -314,7 +337,7 @@ void loop() {
     {
       buttonState2 = false;
       AbsMouse.release(MOUSE_LEFT);
-      //   Serial.println("buttonState2 releaseed");
+        Serial.println("buttonState2 releaseed");
     }
 
     // AbsMouse.release(MOUSE_LEFT );
@@ -325,7 +348,7 @@ void loop() {
     if (!buttonState3)
     {
       buttonState3 = true;
-      //  Serial.println("buttonPin3 clicked and not press MOUSE_RIGHT");
+       Serial.println("buttonPin3 clicked and  press MOUSE_RIGHT");
       //  Serial.println(buttonState3);
       AbsMouse.press(MOUSE_RIGHT );
     }
@@ -339,7 +362,7 @@ void loop() {
     {
       buttonState3 = false;
       AbsMouse.release(MOUSE_RIGHT);
-      //  Serial.println("buttonState3 releaseed");
+       Serial.println("buttonState3 releaseed");
     }
 
     // AbsMouse.release(MOUSE_LEFT );
@@ -352,7 +375,7 @@ void loop() {
     if (!buttonState4)
     {
       buttonState4 = true;
-      //  Serial.println("buttonPin4 clicked and not press MOUSE_RIGHT");
+        Serial.println("buttonPin4 clicked and  press MOUSE_MIDDLE");
       // Serial.println(buttonState4);
       AbsMouse.press(MOUSE_MIDDLE );
     }
@@ -366,17 +389,51 @@ void loop() {
     {
       buttonState4 = false;
       AbsMouse.release(MOUSE_MIDDLE);
-      //  Serial.println("buttonState4 releaseed");
+       Serial.println("buttonState4 releaseed");
     }
 
   }
+
+unsigned long currentMillis = millis();
+if((currentMillis - lastMulShot >= oneShotinterval) && isCelenoidOutputOn_M)
+{
+  digitalWrite(celenoidOutput, LOW);
+  isCelenoidOutputOn_M = false;
+
+}
+
+  
   ///////////////////////////
-  unsigned long currentMillis = millis();
-  if ((currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn)
+  
+  if ((currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn_O)
   {
+    
     digitalWrite(celenoidOutput, LOW);
-    isCelenoidOutputOn = false;
-    Serial.println("digitalWrite(celenoidOutput, LOW)");
+    isCelenoidOutputOn_O = false;
+   Serial.println("digitalWrite(celenoidOutput, LOW)");
+
+   Serial.print("currentMillis:");
+  Serial.println(currentMillis);
+   Serial.print("startShotMillis:");
+  Serial.println(startShotMillis);
+   Serial.print("oneShotinterval:");
+   Serial.println(oneShotinterval);
+  }
+  else
+  {
+//Serial.print("ERROR:");
+//Serial.print("currentMillis:");
+  // Serial.println(currentMillis);
+  // Serial.print("startShotMillis:");
+ //  Serial.println(startShotMillis);
+ //  Serial.print("oneShotinterval:");
+  // Serial.println(oneShotinterval);
+ ///  Serial.print("isCelenoidOutputOn:");
+  // Serial.println(isCelenoidOutputOn);
+//Serial.println("(currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn");
+    
+    //Serial.println((currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn);
+    
   }
 
   delay(50);

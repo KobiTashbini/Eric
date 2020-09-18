@@ -1,13 +1,15 @@
 #include <AbsMouse.h>
 enum ShotState{ 
   oneShot,
-  mulShot
+  mulShot,
+  oneShotThreeTimes
   
 };
 
 
 ShotState  shotState = oneShot;
 
+int oneShotThreeTimesCounter = 0;
 int data;
 int last_analogX = 0;
 int last_analogY = 0;
@@ -77,12 +79,30 @@ void setup() {
 
 void loop() {
 
-
+if(oneShotThreeTimesCounter > 0)
+{
+  oneShotThreeTimesCounter--;
+}
   
 //Serial.println(digitalRead(oneShotButton));
     
  
-  if ( digitalRead(oneShotButton) == HIGH && !isCelenoidOutputOn_O && !oneShotButtonState) {
+  if ( (digitalRead(oneShotButton) == HIGH && !isCelenoidOutputOn_O && !oneShotButtonState ) || oneShotThreeTimesCounter > 0   ) {
+if(shotState == oneShotThreeTimes)
+{
+   Serial.print("shotState == oneShotThreeTimes");
+if(oneShotThreeTimesCounter == 0)
+{
+  oneShotThreeTimesCounter = 10;
+}
+}
+
+
+
+  
+
+ oneShotThreeTimesCounter = 50;
+    
     oneShotButtonState = true;
   //  Serial.print("!digitalRead(oneShotButton) == HIGH");
 
@@ -281,15 +301,27 @@ void loop() {
       mulShotButton = 2;
       oneShotButton = 7;
     }
-    else
+    else if(shotState == mulShot)
     {
 
-       shotState = oneShot;
+
+    
+
+ shotState = oneShotThreeTimes;
+        Serial.println("oneShotThreeTimes");
+         oneShotButton = 2;
+         mulShotButton = 7;
+        
+    }
+    else
+    {
+         shotState = oneShot;
         Serial.println("oneShot");
          oneShotButton = 2;
          mulShotButton = 7;
      
     }
+    
     delay(200);
 
   }
@@ -357,9 +389,9 @@ void loop() {
 
 
   ////////////////////////
-  if (digitalRead(buttonPin2) == HIGH )
+  if (digitalRead(buttonPin2) == HIGH  || oneShotThreeTimesCounter > 0 )
   {
-    if (!buttonState2)
+    if (!buttonState2 || oneShotThreeTimesCounter > 0 )
     {
       buttonState2 = true;
         Serial.println("buttonPin2 clicked and  press MOUSE_LEFT");

@@ -1,4 +1,13 @@
 #include <AbsMouse.h>
+enum ShotState{ 
+  oneShot,
+  mulShot
+  
+};
+
+
+ShotState  shotState = oneShot;
+
 int data;
 int last_analogX = 0;
 int last_analogY = 0;
@@ -9,10 +18,13 @@ int buttonPin3 = 3;
 int buttonPin4 = 4;
 
 int buttonPin2 = 2;
+//int buttonPin2 = 8;
+
 long shotCounter = 0;
 bool mulShotButtonState = false;
 bool oneShotButtonState = false;
-//int oneShotButton = 9;
+int swichModePin = 9;
+
 int oneShotButton = 2;
 int mulShotButton = 8;
 int celenoidOutput = 10;
@@ -64,6 +76,9 @@ void setup() {
 }
 
 void loop() {
+
+
+  
 //Serial.println(digitalRead(oneShotButton));
     
  
@@ -255,6 +270,30 @@ void loop() {
     delay(200);
 
   }
+
+ if (digitalRead(swichModePin) == HIGH )
+  {
+    if(shotState == oneShot)
+    {
+      shotState = mulShot;
+      Serial.println("mulShot");
+
+      mulShotButton = 2;
+      oneShotButton = 7;
+    }
+    else
+    {
+
+       shotState = oneShot;
+        Serial.println("oneShot");
+         oneShotButton = 2;
+         mulShotButton = 7;
+     
+    }
+    delay(200);
+
+  }
+  
   int currentAnalogX = analogRead(A0);
   int currentAnalogY = analogRead(A1);
  // Serial.println("currentAnalogX - ");

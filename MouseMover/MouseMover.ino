@@ -1,19 +1,17 @@
 #include <AbsMouse.h>
 enum ShotState{ 
   oneShot,
-  mulShot,
-  oneShotThreeTimes
+  mulShot
   
 };
 
 
 ShotState  shotState = oneShot;
 
-int oneShotThreeTimesCounter = 0;
 int data;
 int last_analogX = 0;
 int last_analogY = 0;
-
+unsigned long currentMillis = millis();
 int buttonPin = 13;
 
 int buttonPin3 = 3;
@@ -34,6 +32,8 @@ bool isCelenoidOutputOn_M = false;
 bool isCelenoidOutputOn_O = false;
 
 const long oneShotinterval = 2;
+
+const long mulShotIntervalToAvoid = 155;
 
 
 unsigned long startShotMillis = 0;
@@ -79,30 +79,12 @@ void setup() {
 
 void loop() {
 
-if(oneShotThreeTimesCounter > 0)
-{
-  oneShotThreeTimesCounter--;
-}
+
   
 //Serial.println(digitalRead(oneShotButton));
     
  
-  if ( (digitalRead(oneShotButton) == HIGH && !isCelenoidOutputOn_O && !oneShotButtonState ) || oneShotThreeTimesCounter > 0   ) {
-if(shotState == oneShotThreeTimes)
-{
-   Serial.print("shotState == oneShotThreeTimes");
-if(oneShotThreeTimesCounter == 0)
-{
-  oneShotThreeTimesCounter = 10;
-}
-}
-
-
-
-  
-
- oneShotThreeTimesCounter = 50;
-    
+  if ( digitalRead(oneShotButton) == HIGH && !isCelenoidOutputOn_O && !oneShotButtonState) {
     oneShotButtonState = true;
   //  Serial.print("!digitalRead(oneShotButton) == HIGH");
 
@@ -131,12 +113,16 @@ if(oneShotThreeTimesCounter == 0)
 
   }
 
-
-    if ( digitalRead(mulShotButton) == HIGH && !isCelenoidOutputOn_M  ) {
+    currentMillis = millis();
+    if ( digitalRead(mulShotButton) == HIGH && !isCelenoidOutputOn_M && 
+    ( (currentMillis - lastMulShot >= mulShotIntervalToAvoid) || lastMulShot == 0)  ) {
    // Serial.print("igitalRead(mulShotButton) : ");
 
     digitalWrite(celenoidOutput, HIGH);
    Serial.println("digitalWrite(celenoidOutput, HIGH)");
+   Serial.println(millis());
+   
+   
     isCelenoidOutputOn_M = true;
     mulShotButtonState = true;
     lastMulShot = millis();
@@ -301,27 +287,15 @@ if(oneShotThreeTimesCounter == 0)
       mulShotButton = 2;
       oneShotButton = 7;
     }
-    else if(shotState == mulShot)
-    {
-
-
-    
-
- shotState = oneShotThreeTimes;
-        Serial.println("oneShotThreeTimes");
-         oneShotButton = 2;
-         mulShotButton = 7;
-        
-    }
     else
     {
-         shotState = oneShot;
+
+       shotState = oneShot;
         Serial.println("oneShot");
          oneShotButton = 2;
          mulShotButton = 7;
      
     }
-    
     delay(200);
 
   }
@@ -389,9 +363,9 @@ if(oneShotThreeTimesCounter == 0)
 
 
   ////////////////////////
-  if (digitalRead(buttonPin2) == HIGH  || oneShotThreeTimesCounter > 0 )
+  if (digitalRead(buttonPin2) == HIGH )
   {
-    if (!buttonState2 || oneShotThreeTimesCounter > 0 )
+    if (!buttonState2)
     {
       buttonState2 = true;
         Serial.println("buttonPin2 clicked and  press MOUSE_LEFT");
@@ -465,7 +439,7 @@ if(oneShotThreeTimesCounter == 0)
 
   }
 
-unsigned long currentMillis = millis();
+currentMillis = millis();
 if((currentMillis - lastMulShot >= oneShotinterval) && isCelenoidOutputOn_M)
 {
   digitalWrite(celenoidOutput, LOW);

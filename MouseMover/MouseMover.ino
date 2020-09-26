@@ -1,12 +1,15 @@
 #include <AbsMouse.h>
 enum ShotState{ 
   oneShot,
-  mulShot
+  mulShot,
+  emulatorEventsHooker
   
 };
 
 
-ShotState  shotState = oneShot;
+
+
+ShotState  shotState = emulatorEventsHooker;
 
 int data;
 int last_analogX = 0;
@@ -28,10 +31,15 @@ int swichModePin = 9;
 int oneShotButton = 2;
 int mulShotButton = 8;
 int celenoidOutput = 10;
+bool isCelenoidOutputOn_OMAME = false;
+unsigned long  currentMillisMAME = false;
+unsigned long startShotMillisMAME = 0;
+
 bool isCelenoidOutputOn_M = false;
 bool isCelenoidOutputOn_O = false;
 
 const long oneShotinterval = 2;
+const long oneShotintervalMAME = 40;
 
 const long mulShotIntervalToAvoid = 155;
 
@@ -40,7 +48,7 @@ unsigned long startShotMillis = 0;
 unsigned long lastMulShot = 0;
 
 
-bool isMouseShouldMove = true;
+bool isMouseShouldMove = false;
 bool buttonState = false;
 bool buttonState2 = false;
 bool buttonState3 = false;
@@ -95,6 +103,88 @@ void loop() {
   
 ////Serial.println(digitalRead(oneShotButton));
     
+  
+if(shotState == emulatorEventsHooker)
+{
+  
+ 
+
+   
+     
+  if (Serial.available()) {
+    data = Serial.read();
+  if (data == 'A' && !isCelenoidOutputOn_OMAME) {
+    Serial.println(" digitalWrite(celenoidOutput, HIGH);");
+      digitalWrite(celenoidOutput, HIGH);
+        isCelenoidOutputOn_OMAME = true;
+   
+    
+   
+    startShotMillisMAME = millis();
+   // delay(40);
+   //  digitalWrite(celenoidOutput, LOW);
+    }
+
+
+
+
+   
+
+  
+  
+  }
+
+
+
+currentMillisMAME =  millis();
+  ///////////////////////////
+  
+  if ((currentMillisMAME - startShotMillisMAME >= oneShotintervalMAME) && isCelenoidOutputOn_OMAME)
+  {
+    Serial.print("++++++++++++++++++++CELENOID  DOWN++++++++++++++++++++");
+    Serial.print("currentMillisMAME");
+  Serial.println(currentMillisMAME);
+
+  Serial.print("startShotMillisMAME");
+  Serial.println(startShotMillisMAME);
+
+  Serial.print("oneShotinterval");
+  Serial.println(oneShotinterval);
+    
+    digitalWrite(celenoidOutput, LOW);
+    
+     Serial.println("digitalWrite(celenoidOutput, LOW);");
+    isCelenoidOutputOn_OMAME = false;
+   //Serial.println("digitalWrite(celenoidOutput, LOW)");
+
+   Serial.println("currentMillis:");
+  //Serial.println(currentMillis);
+   Serial.println("startShotMillis:");
+  //Serial.println(startShotMillis);
+   Serial.println("oneShotinterval:");
+   //Serial.println(oneShotinterval);
+  }
+
+else
+
+{
+ Serial.print("CELENOID NOT DOWN");
+Serial.print("currentMillisMAME");
+  Serial.println(currentMillisMAME);
+
+  Serial.print("startShotMillisMAME");
+ Serial.println(startShotMillisMAME);
+
+  Serial.print("oneShotinterval");
+  Serial.println(oneShotinterval);
+
+}
+  
+}
+else
+{
+  
+
  
   if ( digitalRead(oneShotButton) == HIGH && !isCelenoidOutputOn_O && !oneShotButtonState) {
     oneShotButtonState = true;
@@ -245,9 +335,6 @@ void loop() {
 
     }
 
-
-
-
     else if (data == 'P') {
   
       xBorderLimitA = C_xBorderLimitA;
@@ -265,17 +352,66 @@ void loop() {
     }
   }
 
-
-
-
-
-
-
-
  // //Serial.println("isMouseShouldMove - ");
  // //Serial.println(isMouseShouldMove);
   
-  if (digitalRead(buttonPin) == HIGH )
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+
+currentMillis = millis();
+if((currentMillis - lastMulShot >= oneShotinterval) && isCelenoidOutputOn_M)
+{
+  digitalWrite(celenoidOutput, LOW);
+  isCelenoidOutputOn_M = false;
+
+}
+
+  
+  ///////////////////////////
+  
+  if ((currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn_O)
+  {
+    
+    digitalWrite(celenoidOutput, LOW);
+    isCelenoidOutputOn_O = false;
+   //Serial.println("digitalWrite(celenoidOutput, LOW)");
+
+   Serial.print("currentMillis:");
+  //Serial.println(currentMillis);
+   Serial.print("startShotMillis:");
+  //Serial.println(startShotMillis);
+   Serial.print("oneShotinterval:");
+   //Serial.println(oneShotinterval);
+  }
+  else
+  {
+//Serial.print("ERROR:");
+//Serial.print("currentMillis:");
+  // //Serial.println(currentMillis);
+  // Serial.print("startShotMillis:");
+ //  //Serial.println(startShotMillis);
+ //  Serial.print("oneShotinterval:");
+  // //Serial.println(oneShotinterval);
+ ///  Serial.print("isCelenoidOutputOn:");
+  // //Serial.println(isCelenoidOutputOn);
+////Serial.println("(currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn");
+    
+    ////Serial.println((currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn);
+    
+  }
+
+}
+
+  
+  //--------------------BEGIN MOUCE EVENTS SECTION -----------------------------
+  
+   if (digitalRead(buttonPin) == HIGH )
   {
     isMouseShouldMove = !isMouseShouldMove;
     // //Serial.println("isMouseShouldMove - ");
@@ -289,31 +425,8 @@ void loop() {
     delay(200);
 
   }
-
- if (digitalRead(swichModePin) == HIGH )
-  {
-    if(shotState == oneShot)
-    {
-      shotState = mulShot;
-      //Serial.println("mulShot");
-
-      mulShotButton = 2;
-      oneShotButton = 7;
-    }
-    else
-    {
-
-       shotState = oneShot;
-        //Serial.println("oneShot");
-         oneShotButton = 2;
-         mulShotButton = 7;
-     
-    }
-    delay(200);
-
-  }
   
-  int currentAnalogX = analogRead(A0);
+   int currentAnalogX = analogRead(A0);
   int currentAnalogY = analogRead(A1);
  // //Serial.println("currentAnalogX - ");
  // //Serial.println(currentAnalogX);
@@ -451,49 +564,41 @@ void loop() {
     }
 
   }
-
-currentMillis = millis();
-if((currentMillis - lastMulShot >= oneShotinterval) && isCelenoidOutputOn_M)
-{
-  digitalWrite(celenoidOutput, LOW);
-  isCelenoidOutputOn_M = false;
-
-}
-
   
-  ///////////////////////////
+    //--------------------END MOUCE EVENTS SECTION -----------------------------
+   if (digitalRead(swichModePin) == HIGH )
+  {
+    if(shotState == oneShot)
+    {
+      shotState = mulShot;
+      //Serial.println("mulShot");
+
+      mulShotButton = 2;
+      oneShotButton = 7;
+    }
   
-  if ((currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn_O)
-  {
-    
-    digitalWrite(celenoidOutput, LOW);
-    isCelenoidOutputOn_O = false;
-   //Serial.println("digitalWrite(celenoidOutput, LOW)");
+   else if(shotState == mulShot )
+    {
 
-   Serial.print("currentMillis:");
-  //Serial.println(currentMillis);
-   Serial.print("startShotMillis:");
-  //Serial.println(startShotMillis);
-   Serial.print("oneShotinterval:");
-   //Serial.println(oneShotinterval);
-  }
-  else
-  {
-//Serial.print("ERROR:");
-//Serial.print("currentMillis:");
-  // //Serial.println(currentMillis);
-  // Serial.print("startShotMillis:");
- //  //Serial.println(startShotMillis);
- //  Serial.print("oneShotinterval:");
-  // //Serial.println(oneShotinterval);
- ///  Serial.print("isCelenoidOutputOn:");
-  // //Serial.println(isCelenoidOutputOn);
-////Serial.println("(currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn");
-    
-    ////Serial.println((currentMillis - startShotMillis >= oneShotinterval) && isCelenoidOutputOn);
-    
-  }
+       shotState = emulatorEventsHooker;
+        
+     
+    }
+    else
+    {
 
-  delay(50);
+       shotState = oneShot;
+        //Serial.println("oneShot");
+         oneShotButton = 2;
+         mulShotButton = 7;
+     
+    }
+    Serial.print("mulShot|");
+    Serial.println(shotState);
+    delay(200);
+
+  }
+  
+  //delay(50);
 }
 //////////////////////
